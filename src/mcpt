@@ -1,0 +1,51 @@
+#! python
+
+import argparse
+import PySimpleGUI as sg
+
+from generator import ChoiceGenerator
+
+def main(args):
+    opt_no = args.row_no * 2
+    sg.theme("GreenTan")
+
+    generator = ChoiceGenerator(opt_no)
+    layout = [[sg.Button("", key='Up', size=(38, 1))]] + \
+             [[sg.Button("", key=('Opt %d' % i), size=(18, 1)),
+               sg.Button("", key=('Opt %d' % (i + 1)), size=(18, 1))] for i in range(0, opt_no, 2)] + \
+             [[sg.Button("", key='Dn', size=(38, 1))]] + \
+             [[sg.MLine(key='-TEXT-'+sg.WRITE_ONLY_KEY, size=(41, 10))]]
+
+    window = sg.Window('Папочка', layout, font=("dejavu sans", args.font_size), element_justification='c').Finalize()
+
+    while True:  # Event Loop
+        window['Up'].update(generator.up())
+        window['Dn'].update(generator.dn())
+        options = generator.options()
+        for opt in range(opt_no):
+            window['Opt {}'.format(opt)].update(options[opt])
+        event, values = window.read()
+        if event == sg.WIN_CLOSED:
+            break
+        if event == "Up":
+            generator.go_up()
+        if event == "Dn":
+            generator.go_dn()
+        if event.startswith('Opt'):
+            generator.choose(int(event[-1]))
+        output = generator.flush()
+        window['-TEXT-'+sg.WRITE_ONLY_KEY].print(output, end="")
+        print(output, end="")
+
+    window.close()
+
+
+if __name__ == "__main__":
+    parser = argparse.ArgumentParser(prog="MCPT", description='Multiple Choice Predictive Typing application.')
+    parser.add_argument('-n', '--row_no', type=int, default=3, metavar='N',
+                        help='Number of choice rows')
+    parser.add_argument('-s', '--font_size', type=int, default=25, metavar='N',
+                        help='Font size')
+
+    args = parser.parse_args()
+    main(args)
