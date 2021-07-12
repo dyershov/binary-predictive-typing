@@ -11,6 +11,7 @@ packages = setuptools.find_packages(where='src')
 
 install_requires = [
     'pysimplegui',
+    'fast_autocomplete[levenshtein]'
 ]
 
 setuptools.setup(name='multiple_choice_predictive_typing',
@@ -23,6 +24,7 @@ setuptools.setup(name='multiple_choice_predictive_typing',
                  url="https://github.com/dyershov/multiple-choice-predictive-typing",
                  package_dir=package_dir,
                  packages=packages,
-                 scripts=['src/mcpt'],
+                 scripts=['scripts/mcpt'],
+                 package_data={'mcpt': ['data/*']},
                  install_requires=install_requires
                  )

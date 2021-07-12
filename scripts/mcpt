@@ -3,13 +3,38 @@
 import argparse
 import PySimpleGUI as sg
 
-from generator import ChoiceGenerator
+import mcpt
+
+import fast_autocomplete as fac
+
+class FacAC:
+    def __init__(self, fac_ac, char_limit):
+        self._fac_ac = fac_ac
+        self._char_limit = char_limit
+
+    def __call__(self, prefix):
+        words = self._fac_ac.get_tokens_flat_list(prefix)
+        index = 0
+        chars = 0
+        for word in words:
+            chars += len(word) + 1
+            if chars > self._char_limit:
+                break
+            index += 1
+        return words[:index]
 
 def main(args):
     opt_no = args.row_no * 2
     sg.theme("GreenTan")
 
-    generator = ChoiceGenerator(opt_no)
+    dict_file = mcpt.utils.search_data_file(args.dictionary)
+    if dict_file:
+        words = mcpt.utils.word_frquency_from_csv_file(dict_file)
+        word_ac = FacAC(fac.AutoComplete(words), 38)
+    else:
+        word_ac = None
+
+    generator = mcpt.ChoiceGenerator(opt_no, ["a", "b", "c", "d", "e", "f", "g", "h", "i", "j", "k", "l", "m", "n", "o", "p", "q", "r", "s", "t", "u", "v", "w", "x", "y", "z"], word_ac)
     layout = [[sg.Button("", key='Up', size=(38, 1))]] + \
              [[sg.Button("", key=('Opt %d' % i), size=(18, 1)),
                sg.Button("", key=('Opt %d' % (i + 1)), size=(18, 1))] for i in range(0, opt_no, 2)] + \
@@ -46,6 +71,8 @@ if __name__ == "__main__":
                         help='Number of choice rows')
     parser.add_argument('-s', '--font_size', type=int, default=25, metavar='N',
                         help='Font size')
+    parser.add_argument('-d', '--dictionary', type=str, default="english-10k", metavar='Data File',
+                        help='Data file for word dictionary')
 
     args = parser.parse_args()
     main(args)
