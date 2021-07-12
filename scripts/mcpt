@@ -7,6 +7,10 @@ import mcpt
 
 import fast_autocomplete as fac
 
+ENGLISH_ALPHABET = ["a", "b", "c", "d", "e", "f", "g", "h", "i", "j", "k", "l", "m", "n", "o", "p", "q", "r", "s", "t", "u", "v", "w", "x", "y", "z"]
+RUSSIAN_ALPHABET = ["а", "б", "в", "г", "д", "е", "ё", "ж", "з", "и", "й", "к", "л", "м", "н", "о", "п", "р", "с", "т", "у", "ф", "х", "ц", "ч", "ш", "щ", "ъ", "ы", "ь", "э", "ю", "я"]
+
+
 class FacAC:
     def __init__(self, fac_ac, char_limit):
         self._fac_ac = fac_ac
@@ -27,14 +31,23 @@ def main(args):
     opt_no = args.row_no * 2
     sg.theme("GreenTan")
 
+    alphabet = ENGLISH_ALPHABET
+
     dict_file = mcpt.utils.search_data_file(args.dictionary)
     if dict_file:
         words = mcpt.utils.word_frquency_from_csv_file(dict_file)
-        word_ac = FacAC(fac.AutoComplete(words), 38)
+        for word in words.keys():
+            if word[0] in ENGLISH_ALPHABET:
+                alphabet = ENGLISH_ALPHABET
+                break
+            if word[0] in RUSSIAN_ALPHABET:
+                alphabet = RUSSIAN_ALPHABET
+                break
+        word_ac = FacAC(fac.AutoComplete(words, valid_chars_for_string="".join(alphabet)), 38)
     else:
         word_ac = None
 
-    generator = mcpt.ChoiceGenerator(opt_no, ["a", "b", "c", "d", "e", "f", "g", "h", "i", "j", "k", "l", "m", "n", "o", "p", "q", "r", "s", "t", "u", "v", "w", "x", "y", "z"], word_ac)
+    generator = mcpt.ChoiceGenerator(opt_no, alphabet, word_ac)
     layout = [[sg.Button("", key='Up', size=(38, 1))]] + \
              [[sg.Button("", key=('Opt %d' % i), size=(18, 1)),
                sg.Button("", key=('Opt %d' % (i + 1)), size=(18, 1))] for i in range(0, opt_no, 2)] + \

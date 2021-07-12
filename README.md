@@ -9,14 +9,14 @@ Clone this repository
  $ cd multiple-choice-predictive-typing
 ```
 
-After clonning, you have two installation options:
+After cloning, you have two installation options:
 * installing into user environment;
-* installing into `conda` environemtn.
+* installing into `conda` environment.
 
-The former option is more convenient, but it pollutes the enviroment
-with all dependancies, which may later be in conflict with multiple
+The former option is more convenient, but it pollutes the environment
+with all dependencies, which may later be in conflict with multiple
 python packages. The latter option requires more upfront steps, but
-isolates the project completely in a separate virual environment.
+isolates the project completely in a separate viral environment.
 
 ### Installing into user environment
 
@@ -42,7 +42,7 @@ Install this package
 
 ### Installing into `conda` environmetns
 
-Create and activate conda environment
+Create and activate `conda` environment
 
 ``` shell
  $ conda create -n mcpt python=3.9
@@ -62,9 +62,25 @@ If you chose to install this package into user environment, simply run the app
 ``` shell
  $ mcpt
 ```
-However, if you chose conda environments, then you have to activate it first before running the app
+However, if you chose `conda` environments, then you have to activate it first before running the app
 
 ``` shell
  $ conda activate mcpt
  $ mcpt
 ```
+
+### Dictionaries
+
+By default the word completion uses `english-10k` dictionary that
+contains ten thousand most common English words. It is possible to use
+different dictionaries for word completion module. For example,
+`russian-news` provides a collection of Russian words mostly used
+during Russian news programs. If you wish to use this dictionary,
+then run as follows:
+
+``` shell
+$ mcpt -d russian-news
+```
+
+Note that the alphabet will be chosen automatically based on the
+dictionary.
