@@ -54,7 +54,7 @@ def main(args):
              [[sg.Button("", key='Dn', size=(38, 1))]] + \
              [[sg.MLine(key='-TEXT-'+sg.WRITE_ONLY_KEY, size=(41, 10))]]
 
-    window = sg.Window('Папочка', layout, font=("dejavu sans", args.font_size), element_justification='c').Finalize()
+    window = sg.Window('Папочка', layout, font=(args.font_name, args.font_size), element_justification='c').Finalize()
 
     while True:  # Event Loop
         window['Up'].update(generator.up())
@@ -82,7 +82,9 @@ if __name__ == "__main__":
     parser = argparse.ArgumentParser(prog="MCPT", description='Multiple Choice Predictive Typing application.')
     parser.add_argument('-n', '--row_no', type=int, default=3, metavar='N',
                         help='Number of choice rows')
-    parser.add_argument('-s', '--font_size', type=int, default=25, metavar='N',
+    parser.add_argument('-f', '--font_name', type=str, default="DejaVu Sans", metavar='N',
+                        help='Font name')
+    parser.add_argument('-s', '--font_size', type=int, default=39, metavar='N',
                         help='Font size')
     parser.add_argument('-d', '--dictionary', type=str, default="english-10k", metavar='Data File',
                         help='Data file for word dictionary')
